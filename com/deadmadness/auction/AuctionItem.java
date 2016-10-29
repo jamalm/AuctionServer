@@ -21,6 +21,11 @@ public class AuctionItem {
 	public int getNum() {
 		return numItems;
 	}
+	public void itemSold(){
+		if(numItems !=0){
+			numItems--;
+		}
+	}
 	
 	public String getItemAtIndex(int i) {
 		return items.get(i);

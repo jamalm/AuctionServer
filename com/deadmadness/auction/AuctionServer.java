@@ -26,12 +26,11 @@ public class AuctionServer implements Runnable{
 	private AuctionItem items;
 	private ArrayList<String> list = new ArrayList<String>();
 	private Scanner keyboard;
+	private Timer timer = null;
 	
 	
 	//constructor for server
 	public AuctionServer(int port){
-		items = new AuctionItem(addItems());
-		
 		try{
 			//binding to physical port
 			System.out.println("Binding to port..");
@@ -43,6 +42,7 @@ public class AuctionServer implements Runnable{
 			
 			//starts the server thread
 			startThread();
+			startAuction();
 		} catch (IOException e) {
 			System.out.println("Bind failed to port " + port);
 			e.printStackTrace();
@@ -57,12 +57,15 @@ public class AuctionServer implements Runnable{
 	//TODO Notify Client of Highest bid for item
 	public String getBid(){ return Integer.toString(bid); }
 	
-	public boolean setBid(String input){
+	public boolean setBid(String input, boolean newGame){
 		
 		int bid = Integer.parseInt(input);
 		
-		if(bid > this.bid){
+		if(bid > this.bid && newGame == false){
 			this.bid = bid; 
+			return true;
+		} else if(newGame){
+			this.bid = bid;
 			return true;
 		} else {
 			return false;
@@ -133,6 +136,13 @@ public class AuctionServer implements Runnable{
 		}
 		
 		switch(ID){
+			case "Time" :
+			{
+				for(int i=0;i<clientCount; i++){
+					clients[i].send("Time Remaining: " + input);
+				}
+				break;
+			}
 			case "Current Item": 
 			{
 				for(int i=0;i<clientCount; i++){
@@ -144,6 +154,20 @@ public class AuctionServer implements Runnable{
 			{
 				for(int i=0;i<clientCount; i++){
 					clients[i].send(ID + ": " + input + "\n");
+				}
+				break;
+			}
+			case "Update" :
+			{
+				for(int i=0;i<clientCount; i++){
+					clients[i].send(input);
+				}
+				break;
+			}
+			case "Start" :
+			{
+				for(int i=0;i<clientCount; i++){
+					clients[i].send(input);
 				}
 				break;
 			}
@@ -222,6 +246,28 @@ public class AuctionServer implements Runnable{
 		}
 		
 		return list;
+	}
+	
+	public void startAuction(){
+		items = new AuctionItem(addItems());
+		broadcast("Start", "Welcome to The Auction!", true);
+		timer = new Timer(this);
+	}
+	
+	public void updateAuction(){
+		items.itemSold();
+		setBid(Integer.toString(10), true);
+		broadcast("Update", "New Item for sale!", true);
+		broadcast("Current Item", itemOnSale(), true);
+		broadcast("Highest Bid", getBid(), true);
+		timer = new Timer(this);
+		
+	}
+	
+	public void resetTime(){
+		timer.interrupt();
+		timer = null;
+		timer = new Timer(this);
 	}
 	
 	public static void main(String[] args) {

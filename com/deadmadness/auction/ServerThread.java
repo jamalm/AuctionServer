@@ -51,10 +51,12 @@ public class ServerThread extends Thread{
 				String bid = in.readUTF();
 				
 				//if bid is higher..
-				if(server.setBid(bid)){
+				if(server.setBid(bid, false)){
 					//set new highest bidder
 					//server.broadcast("Highest Bid", server.getBid(),true);
 					System.out.println(ID + "- Updated bid: " + bid + "\n");
+					server.resetTime();
+					
 				} else {
 					server.broadcast(Integer.toString(ID), "Invalid bid", false);
 				}
