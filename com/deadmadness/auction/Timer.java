@@ -1,5 +1,14 @@
 package com.deadmadness.auction;
 
+
+/*************************************
+ * 
+ * @author Jamal Mahmoud
+ * @version 0.1
+ * 
+ ************************************/
+
+
 public class Timer extends Thread{
 	
 	private AuctionServer server = null;

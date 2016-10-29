@@ -7,6 +7,14 @@ import java.io.InputStreamReader;
 import java.net.Socket;
 import java.net.UnknownHostException;
 
+/*************************************
+ * 
+ * @author Jamal Mahmoud
+ * @version 0.1
+ * 
+ ************************************/
+
+
 public class AuctionClient implements Runnable{
 	private Socket socket = null;
 	private Thread thread = null;

@@ -4,6 +4,13 @@ import java.io.DataInputStream;
 import java.io.IOException;
 import java.net.Socket;
 
+/*************************************
+ * 
+ * @author Jamal Mahmoud
+ * @version 0.1
+ * 
+ ************************************/
+
 public class ClientThread extends Thread{
 	
 	private Socket socket = null;

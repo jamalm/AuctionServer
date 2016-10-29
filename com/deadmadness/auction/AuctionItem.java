@@ -2,6 +2,13 @@ package com.deadmadness.auction;
 
 import java.util.ArrayList;
 
+/*************************************
+ * 
+ * @author Jamal Mahmoud
+ * @version 0.1
+ * 
+ ************************************/
+
 public class AuctionItem {
 	private ArrayList<String> items = new ArrayList<String>();
 	private int numItems;

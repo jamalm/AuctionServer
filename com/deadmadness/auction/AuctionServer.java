@@ -6,7 +6,13 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.Scanner;
-//import java.util.Scanner;
+
+/*************************************
+ * 
+ * @author Jamal Mahmoud
+ * @version 0.1
+ * 
+ ************************************/
 
 public class AuctionServer implements Runnable{
 	

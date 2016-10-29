@@ -7,6 +7,13 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
 
+/*************************************
+ * 
+ * @author Jamal Mahmoud
+ * @version 0.1
+ * 
+ ************************************/
+
 public class ServerThread extends Thread{
 	private AuctionServer server = null;
 	private Socket socket = null;
