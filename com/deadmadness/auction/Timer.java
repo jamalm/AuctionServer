@@ -18,14 +18,14 @@ public class Timer extends Thread{
 	public Timer(AuctionServer server){
 		this.server = server;
 		pause = 5000;	//5 second pause between refreshes
-		timeLeft = 60;
+		timeLeft = 5;
 		
 		start();
 	}
 	
 	public void run(){
 		while(timeLeft > 0){
-			server.broadcast("Time", Integer.toString(timeLeft), true);
+			server.broadcast("Time Remaining: " + Integer.toString(timeLeft));
 			
 			try{
 				Thread.sleep(pause);

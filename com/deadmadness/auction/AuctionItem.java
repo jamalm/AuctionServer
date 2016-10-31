@@ -28,14 +28,19 @@ public class AuctionItem {
 	public int getNum() {
 		return numItems;
 	}
-	public void itemSold(){
-		if(numItems !=0){
+	public boolean nextItem(){
+		System.out.println("NUMITEMS TEST: " + numItems);
+		if(numItems > 1){
 			numItems--;
+			System.out.println("NUMITEMS TEST2: " + numItems);
+			return true;
+		} else {
+			return false;
 		}
 	}
 	
 	public String getItemAtIndex(int i) {
-		return items.get(i);
+			return items.get(i);
 	}
 	
 	public synchronized int removeItem() {

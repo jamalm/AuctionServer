@@ -51,8 +51,8 @@ public class ServerThread extends Thread{
 		
 		while(true) {
 			try {
-				server.broadcast("Current Item", server.itemOnSale(), true);
-				server.broadcast("Highest Bid", server.getBid(), true);
+				server.broadcast("Current Item: " + server.itemOnSale());
+				server.broadcast("Highest Bid: " + server.getBid());
 				
 				//read input
 				String bid = in.readUTF();
@@ -65,7 +65,7 @@ public class ServerThread extends Thread{
 					server.resetTime();
 					
 				} else {
-					server.broadcast(Integer.toString(ID), "Invalid bid", false);
+					server.unicast(ID, "Invalid bid!");
 				}
 				/*
 				if(in.readUTF().equals("QUIT")){

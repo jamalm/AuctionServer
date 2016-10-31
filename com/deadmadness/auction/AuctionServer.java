@@ -15,9 +15,6 @@ import java.util.Scanner;
  ************************************/
 
 public class AuctionServer implements Runnable{
-	
-	
-	
 	//TODO Notify new bid placed
 	//TODO Notify client of closed items
 	//TODO Extra function
@@ -63,14 +60,14 @@ public class AuctionServer implements Runnable{
 	//TODO Notify Client of Highest bid for item
 	public String getBid(){ return Integer.toString(bid); }
 	
-	public boolean setBid(String input, boolean newGame){
+	public boolean setBid(String input, boolean newRound){
 		
 		int bid = Integer.parseInt(input);
 		
-		if(bid > this.bid && newGame == false){
+		if(bid > this.bid && newRound == false){
 			this.bid = bid; 
 			return true;
-		} else if(newGame){
+		} else if(newRound){
 			this.bid = bid;
 			return true;
 		} else {
@@ -96,7 +93,6 @@ public class AuctionServer implements Runnable{
 				stopThread();
 			}
 		}
-		
 	}
 	
 	
@@ -124,11 +120,27 @@ public class AuctionServer implements Runnable{
 		return -1;
 	}
 	
+	public synchronized void unicast(int ID, String input) {
+		
+		for(int i=0;i<clientCount; i++){
+			if(clients[i].getID() == ID){
+				clients[i].send(input);
+			}
+		}
+		notifyAll();
+	}
+	
 	
 	
 	//used for broadcasting information to clients
-	public synchronized void broadcast(String ID, String input, boolean toAll){
+	public synchronized void broadcast(String input){
 		
+		for(int i=0;i<clientCount; i++){
+			clients[i].send(input);
+		}
+
+		notifyAll();
+		/*
 		if(input.equals("QUIT")) {
 			clients[getClient(Integer.parseInt(ID))].send("Thank you for visiting!");
 			remove(Integer.parseInt(ID));
@@ -187,8 +199,7 @@ public class AuctionServer implements Runnable{
 					}
 				}
 			}
-		}
-		notifyAll();
+		}*/
 	}
 	
 	
@@ -254,19 +265,25 @@ public class AuctionServer implements Runnable{
 		return list;
 	}
 	
+	//sets up the initial Auction
 	public void startAuction(){
 		items = new AuctionItem(addItems());
-		broadcast("Start", "Welcome to The Auction!", true);
+		broadcast("Welcome to The Auction!");
 		timer = new Timer(this);
 	}
-	
+	//Updates auction with new item
 	public void updateAuction(){
-		items.itemSold();
-		setBid(Integer.toString(10), true);
-		broadcast("Update", "New Item for sale!", true);
-		broadcast("Current Item", itemOnSale(), true);
-		broadcast("Highest Bid", getBid(), true);
-		timer = new Timer(this);
+		if (items.nextItem() == true){
+			setBid(Integer.toString(10), true);
+			broadcast("New Item for sale!");
+			broadcast("Current Item: " + itemOnSale());
+			broadcast("Highest Bid: " + getBid());
+			timer = new Timer(this);
+		} else {
+			timer = null;
+			setBid(Integer.toString(1000000), true);
+			broadcast("Bid is complete!");
+		}
 		
 	}
 	
@@ -283,6 +300,5 @@ public class AuctionServer implements Runnable{
 		} else {
 			server = new AuctionServer(Integer.parseInt(args[0]));
 		}
-
 	}
 }
