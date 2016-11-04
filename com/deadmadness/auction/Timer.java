@@ -17,8 +17,8 @@ public class Timer extends Thread{
 	
 	public Timer(AuctionServer server){
 		this.server = server;
-		pause = 5000;	//5 second pause between refreshes
-		timeLeft = 5;
+		pause = 10000;	//5 second pause between refreshes
+		timeLeft = 60;
 		
 		start();
 	}
@@ -34,9 +34,12 @@ public class Timer extends Thread{
 				break;
 			}
 			
-			timeLeft -= 5;
+			timeLeft -= 10;
 			
 			if(timeLeft == 0){
+				if(server.getBid() != "10" && server.getBid() != "1000000"){
+					server.unicast(server.winner, "You won!");
+				}
 				server.updateAuction();
 			}
 		}

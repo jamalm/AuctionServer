@@ -26,6 +26,7 @@ public class AuctionServer implements Runnable{
 	private int clientCount = 0;	//number of clients connected
 	
 	private int bid = 10;
+	public int winner = 0;
 	private AuctionItem items;
 	private ArrayList<String> list = new ArrayList<String>();
 	private Scanner keyboard;
@@ -261,7 +262,6 @@ public class AuctionServer implements Runnable{
 				break;
 			}
 		}
-		
 		return list;
 	}
 	

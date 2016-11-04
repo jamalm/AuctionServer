@@ -100,8 +100,8 @@ public class AuctionClient implements Runnable{
 	}*/
 	
 	public void handle(String message) throws IOException {
-		if(message.equals("Thank you for visiting!")) {
-			System.out.println("Thank you for visiting!");
+		if(message.equals("QUIT")) {
+			System.out.println("Thank you for visiting! Press Enter to Exit..");
 			stop();
 		} else {
 			System.out.println(message);

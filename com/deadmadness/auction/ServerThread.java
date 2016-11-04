@@ -49,35 +49,41 @@ public class ServerThread extends Thread{
 		System.out.println("Server Thread " + ID + " running.");
 		thread = new Thread(this);
 		
+		server.broadcast("Current Item: " + server.itemOnSale());
+		server.broadcast("Highest Bid: " + server.getBid());
+		
 		while(true) {
 			try {
-				server.broadcast("Current Item: " + server.itemOnSale());
-				server.broadcast("Highest Bid: " + server.getBid());
-				
 				//read input
 				String bid = in.readUTF();
 				
 				//if bid is higher..
 				if(server.setBid(bid, false)){
 					//set new highest bidder
-					//server.broadcast("Highest Bid", server.getBid(),true);
+					server.broadcast("\nCurrent Item: " + server.itemOnSale());
+					server.broadcast("Updated Bid: " + server.getBid());
 					System.out.println(ID + "- Updated bid: " + bid + "\n");
+					server.winner = ID;
 					server.resetTime();
 					
 				} else {
 					server.unicast(ID, "Invalid bid!");
 				}
-				/*
-				if(in.readUTF().equals("QUIT")){
-					server.broadcast(Integer.toString(ID), in.readUTF(), false);
-				}*/
 				
 				Thread.yield();
 			} catch(IOException e){
 				server.remove(ID);
 				thread = null;
-			} catch(NumberFormatException e){
-				System.out.println("Not a number");
+			} catch (NumberFormatException e){
+				try {
+					if(in.readUTF().equals("QUIT")){
+						server.unicast(ID, "QUIT");
+					} else {
+						System.out.println("Not a number!");
+					}
+				} catch (IOException e1) {
+					e1.printStackTrace();
+				}
 			}
 		}
 	}
