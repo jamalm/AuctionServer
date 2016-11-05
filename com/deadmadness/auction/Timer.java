@@ -38,7 +38,7 @@ public class Timer extends Thread{
 			
 			if(timeLeft == 0){
 				if(server.getBid() != "10" && server.getBid() != "1000000"){
-					server.unicast(server.winner, "You won!");
+					server.unicast(server.winner, "\nYou won!\n");
 				}
 				server.updateAuction();
 			}

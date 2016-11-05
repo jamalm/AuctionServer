@@ -274,6 +274,7 @@ public class AuctionServer implements Runnable{
 	//Updates auction with new item
 	public void updateAuction(){
 		if (items.nextItem() == true){
+			winner = 0;
 			setBid(Integer.toString(10), true);
 			broadcast("\nNew Item for sale!");
 			broadcast("Current Item: " + itemOnSale());
