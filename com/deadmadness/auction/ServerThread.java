@@ -49,7 +49,7 @@ public class ServerThread extends Thread{
 		System.out.println("Server Thread " + ID + " running.");
 		thread = new Thread(this);
 		
-		server.broadcast("Current Item: " + server.itemOnSale());
+		server.broadcast("\nCurrent Item: " + server.itemOnSale());
 		server.broadcast("Highest Bid: " + server.getBid());
 		
 		while(true) {

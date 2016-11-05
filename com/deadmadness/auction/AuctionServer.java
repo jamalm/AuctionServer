@@ -275,14 +275,14 @@ public class AuctionServer implements Runnable{
 	public void updateAuction(){
 		if (items.nextItem() == true){
 			setBid(Integer.toString(10), true);
-			broadcast("New Item for sale!");
+			broadcast("\nNew Item for sale!");
 			broadcast("Current Item: " + itemOnSale());
 			broadcast("Highest Bid: " + getBid());
 			timer = new Timer(this);
 		} else {
 			timer = null;
 			setBid(Integer.toString(1000000), true);
-			broadcast("Bid is complete!");
+			broadcast("\nBid is complete!\n");
 		}
 		
 	}
