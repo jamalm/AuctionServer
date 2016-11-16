@@ -21,6 +21,7 @@ public class AuctionClient implements Runnable{
 	private BufferedReader input = null;
 	private DataOutputStream output = null;
 	private ClientThread client = null;
+	private boolean state = false;
 	
 	public AuctionClient(String serverName, int serverPort) {
 		System.out.println("Connecting to server..");
@@ -42,14 +43,16 @@ public class AuctionClient implements Runnable{
 		while (thread != null) {
 			try {
 				String message = input.readLine();
-				/*if(isValid(message)){
+				if(state && !message.equals("QUIT") && message.matches("\\d+")){
+					output.writeUTF(message);
+					output.flush();
+				} else if(message.equals("QUIT")){
 					output.writeUTF(message);
 					output.flush();
 				} else {
-					System.out.println("\n USAGE: ");
-				}*/
-				output.writeUTF(message);
-				output.flush();
+					message = null;
+				}
+				
 				
 			} catch(IOException e){
 				System.out.println("Sending Error");
@@ -89,21 +92,19 @@ public class AuctionClient implements Runnable{
 		client.close();
 		thread = null;
 	}
-	/*
-	private boolean isValid(String message){
-		for(int i=0;i<message.length();i++){
-			if(!Character.isDigit(message.charAt(i))){
-				return false;
-			}
-		}
-		return true;
-	}*/
 	
 	public void handle(String message) throws IOException {
 		if(message.equals("QUIT")) {
 			System.out.println("Thank you for visiting! Press Enter to Exit..");
 			stop();
-		} else {
+			System.exit(0);
+		} else if(message.equals("Started")){
+			System.out.println("SERVER> " + message);
+			state = true;
+		} else if(message.equals("Stopped")){
+			System.out.println("SERVER> " + message);
+			state = false;
+		}else {
 			System.out.println(message);
 		}
 	}

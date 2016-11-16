@@ -28,25 +28,51 @@ public class AuctionItem {
 	public int getNum() {
 		return numItems;
 	}
-	public boolean nextItem(){
+	private void setNum(){
+		numItems = items.size();
+	}
+	public boolean nextItem(int win){
+		String temp;
 		System.out.println("NUMITEMS TEST: " + numItems);
-		if(numItems > 1){
-			numItems--;
-			System.out.println("NUMITEMS TEST2: " + numItems);
-			return true;
+		
+		if(win!=0){
+			if(numItems > 0){
+				removeItem(numItems-1);
+				setNum();
+				System.out.println("NUMITEMS TEST2: " + numItems);
+				return true;
+			} else {
+				return false;
+			}
 		} else {
-			return false;
+			if(numItems > 0){
+				swap(items.get(numItems-1));
+				System.out.println("NUMITEMS TEST push item to end");
+				
+				return true;
+			} else {
+				return false;
+			}
 		}
+		
 	}
 	
 	public String getItemAtIndex(int i) {
 			return items.get(i);
 	}
 	
-	public synchronized int removeItem() {
-		numItems--;
+	private synchronized void removeItem(int index) {
+		items.remove(index);
 		notify();
 		
-		return numItems;
+	}
+	
+	private void swap(String item){
+		String temp;
+		temp = item;
+		for(int i=1;i<numItems;i++){
+			items.set(numItems-i, items.get(numItems-(i+1)));
+		}
+		items.set(0, temp);
 	}
 }

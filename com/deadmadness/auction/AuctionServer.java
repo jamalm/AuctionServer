@@ -31,6 +31,7 @@ public class AuctionServer implements Runnable{
 	private ArrayList<String> list = new ArrayList<String>();
 	private Scanner keyboard;
 	private Timer timer = null;
+	private boolean state = false; //state of auction
 	
 	
 	//constructor for server
@@ -56,6 +57,10 @@ public class AuctionServer implements Runnable{
 	//TODO Notify Client of Item currently on sale
 	public String itemOnSale() {
 		return items.getItemAtIndex(items.getNum()-1);
+	}
+	
+	public boolean hasStarted(){
+		return state;
 	}
 	
 	//TODO Notify Client of Highest bid for item
@@ -141,69 +146,7 @@ public class AuctionServer implements Runnable{
 		}
 
 		notifyAll();
-		/*
-		if(input.equals("QUIT")) {
-			clients[getClient(Integer.parseInt(ID))].send("Thank you for visiting!");
-			remove(Integer.parseInt(ID));
-		} 
-		if(!toAll){
-			for(int i=0; i<clientCount; i++) {
-				if(clients[i].getID() == Integer.parseInt(ID)) {
-					clients[i].send("Server:> " + input);
-				}
-			}
-		}
-		
-		switch(ID){
-			case "Time" :
-			{
-				for(int i=0;i<clientCount; i++){
-					clients[i].send("Time Remaining: " + input);
-				}
-				break;
-			}
-			case "Current Item": 
-			{
-				for(int i=0;i<clientCount; i++){
-					clients[i].send(ID + ": " + input);
-				}
-				break;
-			}
-			case "Highest Bid" :
-			{
-				for(int i=0;i<clientCount; i++){
-					clients[i].send(ID + ": " + input + "\n");
-				}
-				break;
-			}
-			case "Update" :
-			{
-				for(int i=0;i<clientCount; i++){
-					clients[i].send(input);
-				}
-				break;
-			}
-			case "Start" :
-			{
-				for(int i=0;i<clientCount; i++){
-					clients[i].send(input);
-				}
-				break;
-			}
-			default : 
-			{
-				if(toAll){
-					for(int i=0; i<clientCount; i++) {
-						if(clients[i].getID() != Integer.parseInt(ID)) {
-							clients[i].send(ID + ": " + input);
-						}
-					}
-				}
-			}
-		}*/
 	}
-	
-	
 	
 	
 	public synchronized void remove(int ID){
@@ -240,6 +183,12 @@ public class AuctionServer implements Runnable{
 				clients[clientCount].open();
 				clients[clientCount].start();
 				clientCount++;
+				if(!state){
+					unicast(clients[clientCount-1].getID(),"Stopped");
+					unicast(clients[clientCount-1].getID(),"Welcome to the Auction! Please wait while the items are being added.");
+				} else {
+					unicast(clients[clientCount-1].getID(),"Started");
+				}
 			} catch(IOException e){
 				System.out.println("Error opening thread!");
 				e.printStackTrace();
@@ -267,31 +216,46 @@ public class AuctionServer implements Runnable{
 	
 	//sets up the initial Auction
 	public void startAuction(){
+		winner = 0;
 		items = new AuctionItem(addItems());
+		state = true;
+		broadcast("Started");
 		broadcast("Welcome to The Auction!");
 		timer = new Timer(this);
 	}
 	//Updates auction with new item
 	public void updateAuction(){
-		if (items.nextItem() == true){
-			winner = 0;
-			setBid(Integer.toString(10), true);
-			broadcast("\nNew Item for sale!");
-			broadcast("Current Item: " + itemOnSale());
-			broadcast("Highest Bid: " + getBid());
-			timer = new Timer(this);
-		} else {
-			timer = null;
-			setBid(Integer.toString(1000000), true);
-			broadcast("\nBid is complete!\n");
+		if (items.nextItem(winner)){
+			if(items.getNum()!=0){
+				winner = 0;
+				setBid(Integer.toString(10), true);
+				broadcast("\nNew Item for sale!");
+				broadcast("Current Item: " + itemOnSale());
+				broadcast("Highest Bid: " + getBid());
+				timer = new Timer(this);
+			} else {
+				timer = null;
+				setBid(Integer.toString(1000000), true);
+				broadcast("\nBid is complete!\n");
+				broadcast("Stopped");
+				state = false;
+				System.out.println("Would you like to start another bid? (y/N)");
+				if(new Scanner(System.in).nextLine().equals("y")){
+					startAuction();
+				} else {
+					System.exit(0);
+				}
+			}
 		}
-		
 	}
 	
 	public void resetTime(){
-		timer.interrupt();
-		timer = null;
-		timer = new Timer(this);
+		if(timer != null){
+			timer.interrupt();
+			timer = null;
+			timer = new Timer(this);
+		}
+		
 	}
 	
 	public static void main(String[] args) {

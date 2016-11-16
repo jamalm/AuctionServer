@@ -49,42 +49,37 @@ public class ServerThread extends Thread{
 		System.out.println("Server Thread " + ID + " running.");
 		thread = new Thread(this);
 		
-		server.broadcast("\nCurrent Item: " + server.itemOnSale());
-		server.broadcast("Highest Bid: " + server.getBid());
-		
 		while(true) {
 			try {
-				//read input
 				String bid = in.readUTF();
-				
-				//if bid is higher..
-				if(server.setBid(bid, false)){
-					//set new highest bidder
-					server.broadcast("\nCurrent Item: " + server.itemOnSale());
-					server.broadcast("Updated Bid: " + server.getBid());
-					System.out.println(ID + "- Updated bid: " + bid + "\n");
-					server.winner = ID;
-					server.resetTime();
+				if(bid.equals("QUIT")){
+					server.unicast(ID, "QUIT");
+					server.remove(ID);
+				}
+				else if(server.hasStarted()){
+					//read input
 					
-				} else {
-					server.unicast(ID, "Invalid bid!");
+					
+					//if bid is higher..
+					if(server.setBid(bid, false)){
+						//set new highest bidder
+						server.broadcast("\nCurrent Item: " + server.itemOnSale());
+						server.broadcast("Updated Bid: " + server.getBid());
+						System.out.println(ID + "- Updated bid: " + bid + "\n");
+						server.winner = ID;
+						server.resetTime();
+					} else {
+						server.unicast(ID, "Invalid bid!");
+					}
+					
 				}
 				
 				Thread.yield();
+				
 			} catch(IOException e){
 				server.remove(ID);
 				thread = null;
-			} catch (NumberFormatException e){
-				try {
-					if(in.readUTF().equals("QUIT")){
-						server.unicast(ID, "QUIT");
-					} else {
-						System.out.println("Not a number!");
-					}
-				} catch (IOException e1) {
-					e1.printStackTrace();
-				}
-			}
+			} 
 		}
 	}
 	
