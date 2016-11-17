@@ -4,8 +4,10 @@ import java.util.ArrayList;
 
 /*************************************
  * 
- * @author Jamal Mahmoud
- * @version 0.1
+ * @author Jamal Mahmoud - C13730921
+ * @version 1.0
+ * 
+ * Deals with the items in the auction, removes sold items and loops unsold ones.
  * 
  ************************************/
 
@@ -32,14 +34,13 @@ public class AuctionItem {
 		numItems = items.size();
 	}
 	public boolean nextItem(int win){
-		String temp;
-		System.out.println("NUMITEMS TEST: " + numItems);
+		//System.out.println("NUMITEMS TEST: " + numItems);
 		
 		if(win!=0){
 			if(numItems > 0){
 				removeItem(numItems-1);
 				setNum();
-				System.out.println("NUMITEMS TEST2: " + numItems);
+				//System.out.println("NUMITEMS TEST2: " + numItems);
 				return true;
 			} else {
 				return false;
@@ -47,7 +48,7 @@ public class AuctionItem {
 		} else {
 			if(numItems > 0){
 				swap(items.get(numItems-1));
-				System.out.println("NUMITEMS TEST push item to end");
+				//System.out.println("NUMITEMS TEST push item to end");
 				
 				return true;
 			} else {
@@ -66,7 +67,7 @@ public class AuctionItem {
 		notify();
 		
 	}
-	
+	//swaps elements in the arraylist to loop unsold items
 	private void swap(String item){
 		String temp;
 		temp = item;

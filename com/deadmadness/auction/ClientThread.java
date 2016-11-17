@@ -6,8 +6,10 @@ import java.net.Socket;
 
 /*************************************
  * 
- * @author Jamal Mahmoud
- * @version 0.1
+ * @author Jamal Mahmoud - C13730921
+ * @version 1.0
+ * 
+ * Handles incoming data for each thread of the client
  * 
  ************************************/
 

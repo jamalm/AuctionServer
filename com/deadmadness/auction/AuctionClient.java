@@ -9,8 +9,12 @@ import java.net.UnknownHostException;
 
 /*************************************
  * 
- * @author Jamal Mahmoud
- * @version 0.1
+ * @author Jamal Mahmoud - C13730921
+ * @version 1.0
+ * 
+ * Takes input from user and pushes it out to the server.
+ * Displays incoming data to the user from the server.
+ * Starts and stops client threads.
  * 
  ************************************/
 
@@ -110,12 +114,10 @@ public class AuctionClient implements Runnable{
 	}
 	
 	public static void main(String args[]){
-		AuctionClient client = null;
-		
 		if(args.length !=2){
 			System.out.println("Usage: Java AuctionClient host port");
 		} else {
-			client = new AuctionClient(args[0], Integer.parseInt(args[1]));
+			new AuctionClient(args[0], Integer.parseInt(args[1]));
 		}
 	}
 }

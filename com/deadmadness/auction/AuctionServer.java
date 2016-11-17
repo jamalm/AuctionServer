@@ -9,8 +9,11 @@ import java.util.Scanner;
 
 /*************************************
  * 
- * @author Jamal Mahmoud
- * @version 0.1
+ * @author Jamal Mahmoud - C13730921
+ * @version 1.0
+ * 
+ * Deals with setting up connections and creates threads for users
+ * also handles the auction state (start/stop) and allows the server user to set up items
  * 
  ************************************/
 
@@ -202,7 +205,7 @@ public class AuctionServer implements Runnable{
 		keyboard = new Scanner(System.in);
 		String text;
 		System.out.println("Enter your list of items(add 'END' to complete list): ");
-		for(int i=0;;i++){
+		for(;;){
 			text = keyboard.nextLine();
 			if(!text.equals("END")){
 				list.add(text);
@@ -259,11 +262,10 @@ public class AuctionServer implements Runnable{
 	}
 	
 	public static void main(String[] args) {
-		AuctionServer server = null;
 		if(args.length != 1) {
 			System.out.println("Usage: java AuctionServer port");
 		} else {
-			server = new AuctionServer(Integer.parseInt(args[0]));
+			new AuctionServer(Integer.parseInt(args[0]));
 		}
 	}
 }

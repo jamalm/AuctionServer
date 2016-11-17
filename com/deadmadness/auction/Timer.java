@@ -3,9 +3,11 @@ package com.deadmadness.auction;
 
 /*************************************
  * 
- * @author Jamal Mahmoud
- * @version 0.1
+ * @author Jamal Mahmoud - C13730921
+ * @version 1.0
  * 
+ * Creates a timer for the server to timeout auction items
+ *  
  ************************************/
 
 
@@ -17,7 +19,7 @@ public class Timer extends Thread{
 	
 	public Timer(AuctionServer server){
 		this.server = server;
-		pause = 10000;	//5 second pause between refreshes
+		pause = 1000;	//5 second pause between refreshes
 		timeLeft = 60;
 		
 		start();
@@ -34,11 +36,12 @@ public class Timer extends Thread{
 				break;
 			}
 			
-			timeLeft -= 10;
+			timeLeft -= 60;
 			
 			if(timeLeft == 0){
-				if(server.getBid() != "10" && server.getBid() != "1000000"){
-					server.unicast(server.winner, "\nYou won!\n");
+				if(server.winner != 0){
+					server.broadcast(server.winner + " won " + server.itemOnSale() +"!\n");
+					server.unicast(server.winner, "YOU HAVE WON A LOVELY " + server.itemOnSale()+"!\n");
 				}
 				server.updateAuction();
 			}
